@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendVerification = async (user) => {
+const sendEmailVerification = async (user) => {
   const otp = user.otp;
   const msg = {
     to: user.email,
@@ -37,4 +37,4 @@ const sendVerification = async (user) => {
   await sgMail.send(msg);
 };
 
-export default sendVerification;
+export default sendEmailVerification;

@@ -2,8 +2,7 @@ import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const sendPasswordResetLink = async (token, user) => {
-  const resetLink = `http://localhost:5001/api/v1/auth/reset-password?token=${token}`;
+export const sendPasswordToken = async (otp, user) => {
   const msg = {
     to: user.email,
     from: `CartVerse <${process.env.SENDGRID_SENDER_EMAIL}>`,
@@ -18,12 +17,12 @@ export const sendPasswordResetLink = async (token, user) => {
         <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
           <h2 style="color: #333;">Password Reset Request</h2>
           <p style="color: #777;">Hello ${user.username},</p>
-          <p style="color: #555;">We received a request to reset your CartVerse password. Click the link below to proceed. This link will expire in 10 minutes for security reasons.</p>
+          <p style="color: #555;">We received a request to reset your CartVerse password. Please user the OTP below to reset your password. This code will expire in 10 minutes for security reasons.</p>
           
-          <div style="text-align: center; margin: 20px 0;">
-            <a href="${resetLink}" style="display: inline-block; font-size: 16px; font-weight: bold; color: #ffffff; background-color: #4CAF50; text-decoration: none; padding: 10px 20px; border-radius: 8px;">
-              Reset Password
-            </a>
+         <div style="text-align: center; margin: 20px 0;">
+            <span style="display: inline-block; font-size: 24px; font-weight: bold; color: #4CAF50; letter-spacing: 4px; padding: 10px 20px; border: 2px dashed #4CAF50; border-radius: 8px;">
+              ${otp}
+            </span>
           </div>
           
           <p style="color: #555;">If you didn’t request a password reset, please ignore this email or contact support if you have concerns.</p>

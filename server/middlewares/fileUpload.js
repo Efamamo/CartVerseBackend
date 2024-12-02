@@ -29,7 +29,7 @@ const fileUpload = multer({
 });
 
 export const uploadImages = fileUpload.fields([
-  { name: 'image', maxCount: 1 },
+  { name: 'main_image', maxCount: 1 },
   { name: 'sub_images', maxCount: 5 },
 ]);
 

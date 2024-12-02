@@ -38,7 +38,7 @@ export const addProduct = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      if (req.files.image) {
+      if (req.files.main_image) {
         fs.unlink(req.files.image.path, (err) => {
           console.log(err);
         });
@@ -54,7 +54,9 @@ export const addProduct = async (req, res) => {
 
     const { name, price, amount, description, category } = req.body;
 
-    const imageURL = req.files.image;
+    console.log(req.files);
+
+    const imageURL = req.files.main_image;
     if (!imageURL) {
       return res.status(400).send({
         errors: {
@@ -69,8 +71,10 @@ export const addProduct = async (req, res) => {
       amount,
       description,
       category,
-      main_image: imageURL[0].path,
-      sub_images: imageURL.sub_images ? imageURL.sub_images[0].path : [],
+      main_image: req.files.sub_images ? req.files.sub_images[0].path : '', // First image for the main image
+      sub_images: req.files.sub_images
+        ? req.files.sub_images.map((file) => file.path)
+        : [], 
     });
 
     await newProduct.save();
@@ -176,10 +180,62 @@ export const updateProductImages = async (req, res) => {
   }
 };
 
-export const checkout = (req, res) => {
+export const checkout = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).send({ errors: formatErrors(errors) });
   }
-  res.json({ message: 'Checked out to chapa' });
+
+  const { items, phoneNumber, email } = req.body;
+
+  const error = [];
+  for (const item of items) {
+    const { id, amount } = item;
+
+    const i = await Product.findById(id);
+    if (!i) {
+      error.push(`item with id ${id} not found`);
+    }
+    if (i.amount < amount) {
+      error.push(`amount: there are only ${i.amount} ${i.name}s`);
+    }
+  }
+
+  if (error.length !== 0) {
+    return res.status(400).send({ errors });
+  }
+
+  const newRent = new Rent({
+    email: req.body.email,
+    items: req.body.items,
+    totalAmount: total,
+  });
+
+  const tx = `chewatatest-${newRent._id}`;
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', `Bearer ${process.env.CHAPA_SECRET_KEY}`);
+  myHeaders.append('Content-Type', 'application/json');
+
+  var raw = JSON.stringify({
+    amount: total,
+    currency: 'ETB',
+    email: req.body.email,
+    phone_number: req.body.phoneNumber,
+    tx_ref: tx,
+    callback_url: 'https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60',
+    'customization[title]': 'Payment for my favourite merchant',
+    'customization[description]': 'I love online payments',
+    'meta[hide_receipt]': 'true',
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+  };
+
+  const response = await fetch(
+    'https://api.chapa.co/v1/transaction/initialize',
+    requestOptions
+  );
 };

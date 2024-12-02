@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <div class="loader"></div>
+    <div id="app">
+      <div class="main-wrapper main-wrapper-1">
+        <%- include("./partials/nav.ejs") %> <%-
+        include("./partials/side_bar.ejs") %>
+        <h1>Add Product</h1>
+        <%- include("./partials/settings.ejs") %> <%-
+        include('./partials/footer.ejs') %>
+      </div>
+    </div>
+
+    <!-- General JS Scripts -->
+    <script src="/js/app.min.js"></script>
+    <!-- JS Libraies -->
+    <script src="/bundles/apexcharts/apexcharts.min.js"></script>
+    <!-- Page Specific JS File -->
+    <script src="/js/page/index.js"></script>
+    <!-- Template JS File -->
+    <script src="/js/scripts.js"></script>
+    <!-- Custom JS File -->
+    <script src="/js/custom.js"></script>
+  </body>
+</html>

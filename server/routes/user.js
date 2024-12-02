@@ -3,13 +3,18 @@ import { check } from 'express-validator';
 import {
   changePassword,
   forgotPassword,
+  getWishlists,
+  googleOauth,
   login,
   refreshToken,
   resendOTP,
   resetPassword,
   signup,
+  toggleWishlist,
   verify,
   verifyUser,
+  getProfile,
+  updateProfile,
 } from '../controller/user.js';
 import requireToken from '../middlewares/requireToken.js';
 
@@ -18,7 +23,7 @@ const userRouter = Router();
 userRouter.post(
   '/login',
   [
-    check('username').notEmpty().withMessage("username can't be empty"),
+    check('emailOrPhone').notEmpty().withMessage("emailOrPhone can't be empty"),
     check('password').notEmpty().withMessage("password can't be empty"),
   ],
   login
@@ -27,9 +32,8 @@ userRouter.post(
 userRouter.post(
   '/signup',
   [
-    check('email').notEmpty().withMessage('email cant be empty'),
-    check('email').normalizeEmail().isEmail().withMessage('invalid email'),
-    check('username').notEmpty().withMessage('username cant be empty'),
+    check('name').notEmpty().withMessage('name cant be empty'),
+    check('name').isLength({ min: 3 }).withMessage('minimum name length is 3'),
     check('password')
       .isLength({ min: 6 })
       .withMessage('minimum password length is 6'),
@@ -54,8 +58,7 @@ userRouter.post(
 userRouter.patch(
   '/verify-otp',
   [
-    check('email').notEmpty().withMessage('email cant be empty'),
-    check('email').normalizeEmail().isEmail().withMessage('invalid email'),
+    check('emailOrPhone').notEmpty().withMessage('emailOrPhone cant be empty'),
     check('otp').notEmpty().withMessage('otp is required'),
   ],
   verifyUser
@@ -86,18 +89,19 @@ userRouter.patch(
   changePassword
 );
 
+userRouter.post('/google-auth', googleOauth);
+
 userRouter.patch(
   '/forgot-password',
-  [
-    check('email').notEmpty().withMessage('email cant be empty'),
-    check('email').normalizeEmail().isEmail().withMessage('email is invalid'),
-  ],
+  [check('emailOrPhone').notEmpty().withMessage('emailOrPhone cant be empty')],
   forgotPassword
 );
 
 userRouter.patch(
   '/reset-password',
   [
+    check('token').notEmpty().withMessage('token is required.'),
+
     check('newPassword').notEmpty().withMessage('newPassword is required.'),
     check('newPassword')
       .isLength({ min: 6 })
@@ -108,5 +112,10 @@ userRouter.patch(
   ],
   resetPassword
 );
+
+userRouter.get('/profile', requireToken, getProfile);
+userRouter.patch('/profile', requireToken, updateProfile);
+userRouter.get('/wishlists', requireToken, check(), getWishlists);
+userRouter.patch('/wishlists/:pid', requireToken, toggleWishlist);
 
 export default userRouter;

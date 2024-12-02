@@ -1,0 +1,37 @@
+.container-fluid {
+  margin: 20px;
+}
+
+/* Card Styling */
+.card-box {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-box .min-width-200 {
+  min-width: 200px;
+  max-width: 100%;
+}
+
+.card-box .min-width-600 {
+  min-width: 600px;
+  max-width: 100%;
+}
+
+/* Chart Container Styling */
+#piechart1,
+#piechart2,
+#barchart2 {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .col-lg-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
