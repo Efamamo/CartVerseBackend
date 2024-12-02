@@ -54,7 +54,11 @@ app.get('/roles', (req, res) => {
 });
 
 app.get('/add-role', (req, res) => {
-  res.render('add_role', { title: 'Add Role' });
+  const permissions = [
+    { _id: 123, user_type: 'Admin', description: 'add product' },
+  ];
+
+  res.render('add_role', { title: 'Add Role', permissions });
 });
 
 app.get('/admins', (req, res) => {

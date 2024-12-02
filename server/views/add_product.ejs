@@ -7,7 +7,150 @@
       <div class="main-wrapper main-wrapper-1">
         <%- include("./partials/nav.ejs") %> <%-
         include("./partials/side_bar.ejs") %>
-        <h1>Add Product</h1>
+        <!DOCTYPE html>
+
+        <section class="section mt-10 md:mt-40">
+          <div class="container mt-5">
+            <div class="row">
+              <div
+                class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4"
+              >
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h4>Add Product</h4>
+                  </div>
+                  <div class="card-body">
+                    <form
+                      method="GET"
+                      action="/"
+                      class="needs-validation"
+                      novalidate=""
+                    >
+                      <div class="form-group">
+                        <label for="email">Name</label>
+                        <input
+                          id="name"
+                          type="text"
+                          class="form-control"
+                          name="name"
+                          tabindex="1"
+                          required
+                          autofocus
+                        />
+                        <div class="invalid-feedback">Please fill in name</div>
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Price</label>
+                        <input
+                          id="price"
+                          type="number"
+                          class="form-control"
+                          name="price"
+                          tabindex="2"
+                          required
+                          autofocus
+                        />
+                        <div class="invalid-feedback">Please fill in price</div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="email">Amount</label>
+                        <input
+                          id="amount"
+                          type="number"
+                          class="form-control"
+                          name="amount"
+                          tabindex="3"
+                          required
+                          autofocus
+                        />
+                        <div class="invalid-feedback">
+                          Please fill in amount
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="email">Description</label>
+                        <textarea
+                          rows="5"
+                          id="description"
+                          type="text"
+                          class="form-control"
+                          name="description"
+                          tabindex="1"
+                          required
+                          autofocus
+                        ></textarea>
+
+                        <div class="invalid-feedback">
+                          Please fill in Description
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="d-block">
+                          <label for="catrgory" class="control-label"
+                            >Category</label
+                          >
+                        </div>
+                        <input
+                          id="category"
+                          type="text"
+                          class="form-control"
+                          name="category"
+                          tabindex="2"
+                          required
+                        />
+                        <div class="invalid-feedback">
+                          please fill in category
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="main_image">Main Image</label>
+                        <input
+                          type="file"
+                          class="form-control"
+                          id="main_image"
+                          name="main_image"
+                          accept="image/*"
+                          required
+                        />
+                        <div class="invalid-feedback">
+                          Please select a main image
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="sub_images">Sub Images</label>
+                        <input
+                          type="file"
+                          class="form-control"
+                          id="sub_images"
+                          name="sub_images"
+                          accept="image/*"
+                          multiple
+                        />
+                        <div class="invalid-feedback">
+                          Please select at least one sub image
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <button
+                          type="submit"
+                          class="btn btn-primary btn-lg btn-block"
+                          tabindex="4"
+                        >
+                          Add Product
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <%- include("./partials/settings.ejs") %> <%-
         include('./partials/footer.ejs') %>
       </div>
