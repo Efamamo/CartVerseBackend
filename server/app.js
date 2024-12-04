@@ -34,7 +34,21 @@ app.get('/reset-password', (req, res) => {
 });
 
 app.get('/products', (req, res) => {
-  res.render('products', { title: 'Products' });
+  res.render('products', {
+    title: 'Products',
+    products: [
+      {
+        name: 'Jordan 4',
+        createdAt: '2024-11-27T12:42:39.247+00:00',
+        price: 4500,
+      },
+      {
+        name: 'Jordan 3',
+        createdAt: '2023-11-27T12:42:39.247+00:00',
+        price: 3000,
+      },
+    ],
+  });
 });
 
 app.get('/add-product', (req, res) => {
@@ -46,11 +60,40 @@ app.get('/sales-report', (req, res) => {
 });
 
 app.get('/permissions', (req, res) => {
-  res.render('permissions', { title: 'Permissions' });
+  res.render('permissions', {
+    title: 'Permissions',
+    permissions: [
+      {
+        type: 'ADMIN',
+        code: 'can_view_users_module',
+        description: 'can view users module',
+      },
+      {
+        type: 'SELLER',
+        code: 'can_view_books',
+        description: 'can view products',
+      },
+    ],
+  });
 });
 
 app.get('/roles', (req, res) => {
-  res.render('roles', { title: 'Roles' });
+  res.render('roles', { title: 'Roles' ,roles: [
+    {
+      name: 'ADMIN',
+      description: 'super admin',
+      permissions: 40,
+      createdAt: '2024-10-27T12:42:39.247+00:00',
+      isActive: true
+    },
+    {
+      name: 'SELLER',
+      description: 'product seller',
+      permissions: 10,
+      createdAt: '2024-11-27T12:42:39.247+00:00',
+      isActive: true
+    }
+  ],});
 });
 
 app.get('/add-role', (req, res) => {
@@ -62,7 +105,10 @@ app.get('/add-role', (req, res) => {
 });
 
 app.get('/admins', (req, res) => {
-  res.render('admins', { title: 'Admins' });
+  res.render('admins', {
+    title: 'Admins',
+    admins: [{ name: 'Yohannes', createdAt: '2024-11-27T12:42:39.247+00:00' }],
+  });
 });
 
 app.get('/add-admin', (req, res) => {
@@ -70,11 +116,30 @@ app.get('/add-admin', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-  res.render('users', { title: 'Users' });
+  res.render('users', {
+    title: 'Users',
+    users: [{ name: 'Ephrem', createdAt: '2024-11-27T12:42:39.247+00:00' }],
+  });
 });
 
 app.get('/categories', (req, res) => {
-  res.render('categories', { title: 'Categories' });
+  res.render('categories', {
+    title: 'Categories',
+    categories: [
+      {
+        name_english: 'Clothes',
+        name_amharic: 'አልባሳት',
+        is_active: true,
+        createdAt: '2024-11-27T12:42:39.247+00:00',
+      },
+      {
+        name_english: 'House',
+        name_amharic: 'ቤት',
+        is_active: true,
+        createdAt: '2024-8-27T12:42:39.247+00:00',
+      },
+    ],
+  });
 });
 
 app.get('/add-category', (req, res) => {
@@ -82,7 +147,10 @@ app.get('/add-category', (req, res) => {
 });
 
 app.get('/sellers', (req, res) => {
-  res.render('sellers', { title: 'Sellers' });
+  res.render('sellers', {
+    title: 'Sellers',
+    sellers: [{ name: 'Kaleb', createdAt: '2024-11-27T12:42:39.247+00:00' }],
+  });
 });
 
 app.get('/add-seller', (req, res) => {
