@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./partials/head.ejs') %>
+  <%- include('../partials/head.ejs') %>
   <body>
     <div class="loader"></div>
     <div id="app">
+      <div class="main-wrapper main-wrapper-1">
+        <%- include("../partials/nav.ejs") %> <%-
+        include("../partials/side_bar.ejs") %>
+      </div>
+
       <section class="section mt-10 md:mt-40">
         <div class="container mt-5">
           <div class="row">
@@ -12,7 +17,7 @@
             >
               <div class="card card-primary">
                 <div class="card-header">
-                  <h4>Login</h4>
+                  <h4>Add Seller</h4>
                 </div>
                 <div class="card-body">
                   <form
@@ -22,42 +27,35 @@
                     novalidate=""
                   >
                     <div class="form-group">
-                      <label for="email">Email</label>
+                      <label for="email">Seller Name</label>
                       <input
-                        id="email"
-                        type="email"
+                        id="text"
+                        type="text"
                         class="form-control"
-                        name="email"
+                        name="text"
                         tabindex="1"
                         required
                         autofocus
                       />
                       <div class="invalid-feedback">
-                        Please fill in your email
+                        Please fill in seller name
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="d-block">
                         <label for="password" class="control-label"
-                          >Password</label
+                          >Image</label
                         >
-                        <div class="float-right">
-                          <a href="/forgot-password" class="text-small">
-                            Forgot Password?
-                          </a>
-                        </div>
                       </div>
                       <input
-                        id="password"
-                        type="password"
+                        id="image"
+                        type="file"
                         class="form-control"
-                        name="password"
+                        name="image"
                         tabindex="2"
                         required
                       />
-                      <div class="invalid-feedback">
-                        please fill in your password
-                      </div>
+                      <div class="invalid-feedback">please select image</div>
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox">
@@ -69,7 +67,7 @@
                           id="remember-me"
                         />
                         <label class="custom-control-label" for="remember-me"
-                          >Remember Me</label
+                          >To be recommended on home page</label
                         >
                       </div>
                     </div>
@@ -79,41 +77,30 @@
                         class="btn btn-primary btn-lg btn-block"
                         tabindex="4"
                       >
-                        Login
+                        Submit
                       </button>
                     </div>
                   </form>
-                  <div class="text-center mt-4 mb-3">
-                    <div class="text-job text-muted">Login With Social</div>
-                  </div>
-                  <div class="row sm-gutters">
-                    <div class="col-6">
-                      <a class="btn btn-block btn-social btn-facebook">
-                        <span class="fab fa-facebook"></span> Facebook
-                      </a>
-                    </div>
-                    <div class="col-6">
-                      <a class="btn btn-block btn-social btn-twitter">
-                        <span class="fab fa-google"></span> Google
-                      </a>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    </div>
-    <!-- General JS Scripts -->
-    <script src="js/app.min.js"></script>
-    <!-- JS Libraies -->
-    <!-- Page Specific JS File -->
-    <!-- Template JS File -->
-    <script src="js/scripts.js"></script>
-    <!-- Custom JS File -->
-    <script src="js/custom.js"></script>
-  </body>
 
-  <!-- auth-login.html  21 Nov 2019 03:49:32 GMT -->
+      <%- include("../partials/settings.ejs") %> <%-
+      include("../partials/footer.ejs") %>
+    </div>
+
+    <!-- General JS Scripts -->
+    <script src="/js/app.min.js"></script>
+    <!-- JS Libraies -->
+    <script src="/bundles/apexcharts/apexcharts.min.js"></script>
+    <!-- Page Specific JS File -->
+    <script src="/js/page/index.js"></script>
+    <!-- Template JS File -->
+    <script src="/js/scripts.js"></script>
+    <!-- Custom JS File -->
+    <script src="/js/custom.js"></script>
+  </body>
 </html>

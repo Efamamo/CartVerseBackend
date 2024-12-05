@@ -5,12 +5,14 @@ import userRouter from './routes/user.js';
 import productRouter from './routes/product.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import { createPermission } from './config/init/index.js';
+import { Permission, Role } from './models/permission.js';
 const app = express();
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 app.use(express.json());
 app.use(cors());
 connectToDB();
+createPermission();
 
 app.set('view engine', 'ejs');
 const __filename = fileURLToPath(import.meta.url);
@@ -18,23 +20,23 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Dashboard' });
+  res.render('dashboard/index', { title: 'Dashboard' });
 });
 
 app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login' });
+  res.render('auth/login', { title: 'Login' });
 });
 
 app.get('/forgot-password', (req, res) => {
-  res.render('forgot_password', { title: 'Forgot Password' });
+  res.render('auth/forgot_password', { title: 'Forgot Password' });
 });
 
 app.get('/reset-password', (req, res) => {
-  res.render('reset_password', { title: 'Reset Password' });
+  res.render('auth/reset_password', { title: 'Reset Password' });
 });
 
 app.get('/products', (req, res) => {
-  res.render('products', {
+  res.render('products/products', {
     title: 'Products',
     products: [
       {
@@ -52,78 +54,53 @@ app.get('/products', (req, res) => {
 });
 
 app.get('/add-product', (req, res) => {
-  res.render('add_product', { title: 'Add Product' });
+  res.render('products/add_product', { title: 'Add Product' });
 });
 
 app.get('/sales-report', (req, res) => {
-  res.render('sales_report', { title: 'Sales Report' });
+  res.render('products/sales_report', { title: 'Sales Report', report: [] });
 });
 
-app.get('/permissions', (req, res) => {
-  res.render('permissions', {
+app.get('/permissions', async (req, res) => {
+  const permissions = await Permission.find();
+
+  res.render('permissions/permissions', {
     title: 'Permissions',
-    permissions: [
-      {
-        type: 'ADMIN',
-        code: 'can_view_users_module',
-        description: 'can view users module',
-      },
-      {
-        type: 'SELLER',
-        code: 'can_view_books',
-        description: 'can view products',
-      },
-    ],
+    permissions,
   });
 });
 
-app.get('/roles', (req, res) => {
-  res.render('roles', { title: 'Roles' ,roles: [
-    {
-      name: 'ADMIN',
-      description: 'super admin',
-      permissions: 40,
-      createdAt: '2024-10-27T12:42:39.247+00:00',
-      isActive: true
-    },
-    {
-      name: 'SELLER',
-      description: 'product seller',
-      permissions: 10,
-      createdAt: '2024-11-27T12:42:39.247+00:00',
-      isActive: true
-    }
-  ],});
+app.get('/roles', async (req, res) => {
+  const roles = await Role.find();
+
+  res.render('roles/roles', { title: 'Roles', roles });
 });
 
-app.get('/add-role', (req, res) => {
-  const permissions = [
-    { _id: 123, user_type: 'Admin', description: 'add product' },
-  ];
-
-  res.render('add_role', { title: 'Add Role', permissions });
+app.get('/add-role', async (req, res) => {
+  const permissions = await Permission.find().sort('code_name');
+  res.render('roles/add_role', { title: 'Add Role', permissions });
 });
 
 app.get('/admins', (req, res) => {
-  res.render('admins', {
+  res.render('admin/admins', {
     title: 'Admins',
     admins: [{ name: 'Yohannes', createdAt: '2024-11-27T12:42:39.247+00:00' }],
   });
 });
 
 app.get('/add-admin', (req, res) => {
-  res.render('add_admin', { title: 'Add Admin' });
+  res.render('admin/add_admin', { title: 'Add Admin' });
 });
 
 app.get('/users', (req, res) => {
-  res.render('users', {
+  res.render('users/users', {
     title: 'Users',
     users: [{ name: 'Ephrem', createdAt: '2024-11-27T12:42:39.247+00:00' }],
   });
 });
 
 app.get('/categories', (req, res) => {
-  res.render('categories', {
+  res.render('category/categories', {
     title: 'Categories',
     categories: [
       {
@@ -143,38 +120,30 @@ app.get('/categories', (req, res) => {
 });
 
 app.get('/add-category', (req, res) => {
-  res.render('add_category', { title: 'Add Category' });
+  res.render('category/add_category', { title: 'Add Category' });
 });
 
 app.get('/sellers', (req, res) => {
-  res.render('sellers', {
+  res.render('sellers/sellers', {
     title: 'Sellers',
     sellers: [{ name: 'Kaleb', createdAt: '2024-11-27T12:42:39.247+00:00' }],
   });
 });
 
 app.get('/add-seller', (req, res) => {
-  res.render('add_seller', { title: 'Add Seller' });
+  res.render('sellers/add_seller', { title: 'Add Seller' });
 });
 
 app.get('/purchases', (req, res) => {
-  res.render('purchase_list', { title: 'All Purchse' });
+  res.render('purchase/purchase_list', { title: 'All Purchse', purchases: [] });
 });
 
-app.get('/paid-purchase', (req, res) => {
-  res.render('paid_purchase', { title: 'Paid Purchase' });
-});
-
-app.get('/sold-books', (req, res) => {
-  res.render('sold_books', { title: 'Sold Books' });
-});
-
-app.get('/pending-purchase', (req, res) => {
-  res.render('pending_purchase', { title: 'Pending Purchase' });
+app.get('/sold-products', (req, res) => {
+  res.render('products/sold_products', { title: 'Sold Products' });
 });
 
 app.get('/wishlists', (req, res) => {
-  res.render('wishlists', { title: 'Wishlists' });
+  res.render('wishlists/wishlists', { title: 'Wishlists' });
 });
 
 app.use('/api/v1/auth', userRouter);

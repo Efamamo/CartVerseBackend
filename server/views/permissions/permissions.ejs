@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./partials/head.ejs') %>
+  <%- include('../partials/head.ejs') %>
   <body>
     <div class="loader"></div>
     <div id="app">
       <div class="main-wrapper main-wrapper-1">
-        <%- include("./partials/nav.ejs") %> <%-
-        include("./partials/side_bar.ejs") %>
-        <section class="section mt-10 md:mt-40">
+        <%- include("../partials/nav.ejs") %> <%-
+        include("../partials/side_bar.ejs") %>
+        <section class="section my-10 md:mt-40 md:mb-32">
           <div class="card col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-5 offset-xl-4">
             
             <div class="card-body">
@@ -28,8 +28,8 @@
                     <% for (let item of permissions) { %>
                       <tr>
                         <td><%= index %></td>
-                        <td><%= item.type %></td>
-                        <td><%= item.code %></td>
+                        <td><%= item.user_type %></td>
+                        <td><%= item.code_name %></td>
                         <td><%= item.description %></td>
 
                       </tr>
@@ -45,8 +45,8 @@
         </section>
       </div>
 
-      <%- include("./partials/settings.ejs") %> <%-
-      include('./partials/footer.ejs') %>
+      <%- include("../partials/settings.ejs") %> <%-
+      include('../partials/footer.ejs') %>
     </div>
 
     <!-- General JS Scripts -->

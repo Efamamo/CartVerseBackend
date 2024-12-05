@@ -34,3 +34,6 @@ export const isValidPhoneNumber = (phone) => {
 
   return isValidStart;
 };
+
+export const USER_TYPES = ['ADMIN', 'CONTENT_CREATORS'];
+export const GENDER_TYPES = ['MALE', 'FEMALE'];

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <div class="loader"></div>
+    <div id="app">
+      <div class="main-wrapper main-wrapper-1">
+        <%- include("../partials/nav.ejs") %> <%-
+        include("../partials/side_bar.ejs") %> <
+        <div class="card-body max-w-6xl mx-auto mt-5">
+          <h4 class="card-title mb-4 text-center">Filter by User Type</h4>
+          <div class="row">
+            <div class="col-sm-12">
+              <form id="user-type-radio-container">
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="mb-3">Select User Type</h6>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="user_type"
+                        id="radioAll"
+                        value="ALL"
+                      />
+                      <label class="form-check-label" for="radioAll">All</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="user_type"
+                        id="radioAdmin"
+                        value="ADMIN"
+                      />
+                      <label class="form-check-label" for="radioAdmin"
+                        >Admin</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <label for="role_name" class="form-label">Role Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="role_name"
+                      name="role_name"
+                      placeholder="Enter Unique Role Name"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input select-all"
+                        type="checkbox"
+                        id="selectAll"
+                      />
+                      <label class="form-check-label" for="selectAll">
+                        Select All Permissions
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row gy-3" id="permission-list-container">
+                  <% permissions.forEach(permission => { %>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input permission"
+                        type="checkbox"
+                        data-user-type="<%= permission.user_type %>"
+                        name="permissions[]"
+                        id="<%= permission._id %>"
+                        value="<%= permission._id %>"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="<%= permission._id %>"
+                      >
+                        <%= permission.description %>
+                      </label>
+                    </div>
+                  </div>
+                  <% }) %>
+                </div>
+
+                <div class="row mt-5">
+                  <div class="col-md-12 text-end">
+                    <a href="/home/users/roles/all" class="btn btn-danger me-2"
+                      >Cancel</a
+                    >
+                    <button
+                      type="button"
+                      onclick="CreateRole()"
+                      class="btn btn-primary"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <%- include("../partials/settings.ejs") %> <%-
+        include('../partials/footer.ejs') %>
+      </div>
+    </div>
+
+    <!-- General JS Scripts -->
+    <script src="/js/app.min.js"></script>
+    <!-- JS Libraries -->
+    <script src="/bundles/apexcharts/apexcharts.min.js"></script>
+    <!-- Page Specific JS File -->
+    <script src="/js/page/index.js"></script>
+    <!-- Template JS File -->
+    <script src="/js/scripts.js"></script>
+    <!-- Custom JS File -->
+    <script src="/js/custom.js"></script>
+  </body>
+</html>
