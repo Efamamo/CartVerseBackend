@@ -71,15 +71,15 @@ export const addProduct = async (req, res) => {
       amount,
       description,
       category,
-      main_image: req.files.sub_images ? req.files.sub_images[0].path : '', // First image for the main image
+      main_image: req.files.main_image[0].path, // First image for the main image
       sub_images: req.files.sub_images
         ? req.files.sub_images.map((file) => file.path)
-        : [], 
+        : [],
     });
 
     await newProduct.save();
 
-    res.status(201).json(newProduct);
+    res.redirect('/dashboard/products');
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
@@ -100,8 +100,9 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product Not Found' });
     }
 
-    res.sendStatus(204);
+    res.redirect('/dashboard/products');
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Server Error' });
   }
 };
@@ -128,6 +129,8 @@ export const updateProduct = async (req, res) => {
       }
     });
 
+    console.log(updateData)
+
     // Find product by id and update with the new data
     const product = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
@@ -138,7 +141,7 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product Not Found' });
     }
 
-    res.json(product);
+    res.redirect('/dashboard/products');
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
   }

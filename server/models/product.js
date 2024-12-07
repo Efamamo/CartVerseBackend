@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -33,8 +33,13 @@ const productSchema = new mongoose.Schema({
   },
 
   category: {
-    type: String,
+    type: mongoose.Types.ObjectId,
     required: true,
+    ref: 'Category',
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
   },
 });
 

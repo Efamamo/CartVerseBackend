@@ -19,8 +19,8 @@
                   </div>
                   <div class="card-body">
                     <form
-                      method="GET"
-                      action="/"
+                      method="post"
+                      action="/dashboard/categories/add"
                       class="needs-validation"
                       novalidate=""
                     >
@@ -30,7 +30,7 @@
                           id="english_category"
                           type="text"
                           class="form-control"
-                          name="english_category"
+                          name="name_english"
                           tabindex="1"
                           required
                           autofocus
@@ -49,7 +49,7 @@
                           id="amharic_category"
                           type="text"
                           class="form-control"
-                          name="amharic_category"
+                          name="name_amharic"
                           tabindex="2"
                           required
                         />
@@ -66,7 +66,7 @@
                         <textarea
                           id="note"
                           class="form-control"
-                          name="note"
+                          name="description"
                           tabindex="3"
                         ></textarea>
                       </div>

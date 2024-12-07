@@ -1,15 +1,18 @@
 import express from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser'
 import { connectToDB } from './database/mongoose.js';
 import userRouter from './routes/user.js';
 import productRouter from './routes/product.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createPermission } from './config/init/index.js';
-import dashboardRouter from './routes/dashboard/dashboard.js'
+import dashboardRouter from './routes/dashboard/dashboard.js';
 
 const app = express();
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json());
 app.use(cors());
 connectToDB();
@@ -20,7 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname + '/public'));
 
-app.use("/dashboard", dashboardRouter)
+app.use('/dashboard', dashboardRouter);
 app.use('/api/v1/auth', userRouter);
 app.use('/api/v1/products', productRouter);
 
@@ -30,5 +33,5 @@ app.use((req, res, next) => {
 });
 
 app.listen(3003, '0.0.0.0', () => {
-  console.log('Server running on port 5001');
+  console.log('Server running on port 3003');
 });
