@@ -3,6 +3,7 @@ import { formatErrors } from '../lib/utils.js';
 import fs from 'fs';
 import { Product } from '../models/product.js';
 import mongoose from 'mongoose';
+import { AdminUser } from '../models/admin.js';
 
 export const getProducts = async (req, res) => {
   try {
@@ -53,8 +54,7 @@ export const addProduct = async (req, res) => {
     }
 
     const { name, price, amount, description, category } = req.body;
-
-    console.log(req.files);
+    const { id } = req.user;
 
     const imageURL = req.files.main_image;
     if (!imageURL) {
@@ -71,6 +71,7 @@ export const addProduct = async (req, res) => {
       amount,
       description,
       category,
+      owner: id,
       main_image: req.files.main_image[0].path, // First image for the main image
       sub_images: req.files.sub_images
         ? req.files.sub_images.map((file) => file.path)
@@ -89,6 +90,7 @@ export const addProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
+    const user = await AdminUser.findById(req.user.id);
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid Product ID' });
@@ -98,6 +100,10 @@ export const deleteProduct = async (req, res) => {
 
     if (!product) {
       return res.status(404).json({ error: 'Product Not Found' });
+    }
+
+    if (product.owner.equals(user.id) || user.is_superuser) {
+      await Product.findByIdAndDelete(id);
     }
 
     res.redirect('/dashboard/products');
@@ -114,6 +120,8 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Product ID' });
     }
 
+    const user = await AdminUser.findById(req.user.id);
+
     const updateData = {};
     const allowedFields = [
       'name',
@@ -129,20 +137,23 @@ export const updateProduct = async (req, res) => {
       }
     });
 
-    console.log(updateData)
-
-    // Find product by id and update with the new data
-    const product = await Product.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    let product = await Product.findById(id);
 
     if (!product) {
       return res.status(404).json({ error: 'Product Not Found' });
     }
 
-    res.redirect('/dashboard/products');
+    if (product.owner.equals(user._id) || user.is_superuser) {
+      product = await Product.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+      return res.redirect('/dashboard/products');
+    }
+
+    return res.redirect(`/dashboard/products/${id}/edit`);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Server Error' });
   }
 };

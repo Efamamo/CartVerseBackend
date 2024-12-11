@@ -1,8 +1,9 @@
 import { Router } from 'express';
+import checkRole from '../../middlewares/requireRole.js';
 
 const purchaseRouter = Router();
 
-purchaseRouter.get('/', (req, res) => {
+purchaseRouter.get('/', checkRole('can_view_purchases'), (req, res) => {
   res.render('purchase/purchase_list', { title: 'All Purchse', purchases: [] });
 });
 

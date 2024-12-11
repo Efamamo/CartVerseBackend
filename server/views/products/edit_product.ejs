@@ -106,11 +106,13 @@
                         >
                           <option value="" disabled selected>Select a category</option>
                           <% categories.forEach(function (category) { %>
+                            
                             <option value="<%= category.id %>" 
                               <%= category.id === product.category.id ? 'selected' : '' %>>
                               <%= category.name_english %> (<%= category.name_amharic %>)
                             </option>
-                          <% }); %>
+                          
+                          <% }) %>
                         </select>
                         <div class="invalid-feedback">
                           Please select a category

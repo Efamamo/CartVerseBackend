@@ -2,7 +2,6 @@
 <html lang="en">
   <%- include('../partials/head.ejs') %>
   <body>
-    <div class="loader"></div>
     <div id="app">
       <section class="section mt-10 md:mt-40">
         <div class="container mt-5">
@@ -15,12 +14,7 @@
                   <h4>Login</h4>
                 </div>
                 <div class="card-body">
-                  <form
-                    method="GET"
-                    action="/"
-                    class="needs-validation"
-                    novalidate=""
-                  >
+                  <form class="needs-validation" novalidate="">
                     <div class="form-group">
                       <label for="email">Email</label>
                       <input
@@ -32,7 +26,7 @@
                         required
                         autofocus
                       />
-                      <div class="invalid-feedback">
+                      <div class="invalid-feedback email-error">
                         Please fill in your email
                       </div>
                     </div>
@@ -55,7 +49,7 @@
                         tabindex="2"
                         required
                       />
-                      <div class="invalid-feedback">
+                      <div class="invalid-feedback password-error">
                         please fill in your password
                       </div>
                     </div>
@@ -105,6 +99,40 @@
         </div>
       </section>
     </div>
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = form.email.value;
+        const password = form.password.value;
+
+        try {
+          const response = await fetch('/dashboard/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, password: password }),
+          });
+
+          if (response.status == 401) {
+            const passwordError = document.querySelector('.password-error');
+            passwordError.textContent = 'Email or Password is incorrect';
+            passwordError.style.display = 'block';
+          } else if (response.status == 400) {
+            console.log('bad request');
+          } else if (response.status == 500) {
+            console.log('server error');
+          } else {
+            window.location.href = '/dashboard';
+          }
+
+          const data = await response.json();
+
+          console.log(response);
+        } catch {}
+      });
+    </script>
     <!-- General JS Scripts -->
     <script src="js/app.min.js"></script>
     <!-- JS Libraies -->

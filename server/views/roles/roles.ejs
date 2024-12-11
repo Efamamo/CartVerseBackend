@@ -36,14 +36,14 @@
                     <% for (let item of roles) { %>
                       <tr class="text-center">
                         <td><%= index %></td>
-                        <td><%= item.name %></td>
-                        <td><%= item.permissions %></td>
+                        <td><%= item.role_name %></td>
+                        <td><%= item.permissions.length %></td>
                         <td><%= new Date(item.createdAt).toLocaleString() %></td>
-                        <td><%= item.isActive %></td>
+                        <td><%= item.is_active %></td>
                         <td class="text-center">
                           <a 
                             class="btn btn-success btn-sm" 
-                            href="/admin/app-user/update/<%= item._id %>"
+                            href="/dashboard/roles/<%= item._id %>/edit"
                           >
                             <i class="fas fa-pencil-alt"></i> Edit
                           </a>
@@ -51,7 +51,7 @@
                         <td class="text-center">
                           <a 
                             class="btn btn-danger btn-sm" 
-                            href="/admin/app-user/delete/<%= item._id %>"
+                            href="/dashboard/roles/<%= item._id %>/delete"
                             onclick="return confirm('Are you sure you want to delete this user?');"
                           >
                             <i class="fas fa-trash"></i> Remove

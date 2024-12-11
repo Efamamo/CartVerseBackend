@@ -106,7 +106,8 @@
                           </option>
                           <% categories.forEach(function (category) { %>
                           <option value="<%= category._id %>">
-                            <%= category.name_english %> ( <%= category.name_amharic %> )
+                            <%= category.name_english %> ( <%=
+                            category.name_amharic %> )
                           </option>
                           <% }); %>
                         </select>

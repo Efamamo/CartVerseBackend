@@ -11,7 +11,7 @@
           <div class="row">
             <div class="col-sm-12">
               <form
-                action="/dashboard/admins/add"
+                action="/dashboard/admins/<%= admin._id %>/edit"
                 method="post"
                 id="user-type-radio-container"
               >
@@ -27,12 +27,14 @@
                     class="form-control"
                     name="first_name"
                     tabindex="2"
+                    value="<%= admin.first_name %>"
                     required
                   />
                   <div class="invalid-feedback password-error">
                     please fill in first name
                   </div>
                 </div>
+
                 <div class="form-group">
                   <div class="d-block">
                     <label for="last_name" class="control-label"
@@ -45,6 +47,7 @@
                     class="form-control"
                     name="last_name"
                     tabindex="2"
+                    value="<%= admin.last_name %>"
                     required
                   />
                   <div class="invalid-feedback password-error">
@@ -64,6 +67,7 @@
                     class="form-control"
                     name="phone_number"
                     tabindex="2"
+                    value="<%= admin.phone_number %>"
                     required
                   />
                   <div class="invalid-feedback password-error">
@@ -83,6 +87,7 @@
                     class="form-control"
                     name="email_address"
                     tabindex="2"
+                    value="<%= admin.email_address %>"
                     required
                   />
                   <div class="invalid-feedback password-error">
@@ -91,50 +96,10 @@
                 </div>
 
                 <div class="form-group">
-                  <div class="d-block">
-                    <label for="user_password" class="control-label"
-                      >Password</label
-                    >
-                  </div>
-                  <input
-                    id="user_password"
-                    type="password"
-                    class="form-control"
-                    name="user_password"
-                    tabindex="2"
-                    required
-                  />
-                  <div class="invalid-feedback password-error">
-                    please fill in your password
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="d-block">
-                    <label for="passcode" class="control-label">Passcode</label>
-                  </div>
-                  <input
-                    id="passcode"
-                    type="number"
-                    class="form-control"
-                    name="passcode"
-                    tabindex="2"
-                    required
-                  />
-                  <div class="invalid-feedback password-error">
-                    please fill in passcode
-                  </div>
-                </div>
-
-                <div class="form-group">
                   <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      name="is_active"
-                      class="custom-control-input"
-                      tabindex="3"
-                      id="is_active"
-                    />
+                    <input type="checkbox" name="is_active"
+                    class="custom-control-input" tabindex="3" id="is_active" <%=
+                    admin.is_active ? 'checked' : '' %> />
                     <label class="custom-control-label" for="is_active"
                       >Is Active</label
                     >
@@ -164,12 +129,9 @@
                   <% roles.forEach(role => { %>
                   <div class="col-md-4">
                     <div class="form-check">
-                      <input
-                        class="form-check-input permission"
-                        type="checkbox"
-                        name="roles[]"
-                        id="<%= role._id %>"
-                        value="<%= role._id %>"
+                      <input class="form-check-input permission" type="checkbox"
+                      name="roles[]" id="<%= role._id %>" value="<%= role._id
+                      %>" <%= admin.roles.includes(role._id) ? 'checked' : '' %>
                       />
                       <label class="form-check-label" for="<%= role._id %>">
                         <%= role.role_name %>
@@ -181,7 +143,9 @@
 
                 <div class="row mt-5">
                   <div class="col-md-12 text-end">
-                    <a href="javascript:history.back()" class="btn btn-danger me-2"
+                    <a
+                      href="javascript:history.back()"
+                      class="btn btn-danger me-2"
                       >Cancel</a
                     >
                     <button type="submit" class="btn btn-primary">Save</button>

@@ -34,12 +34,13 @@
                     <% for (let admin of admins) { %>
                       <tr>
                         <td><%= index %></td>
-                        <td><%= admin.name %></td>
+                        <td><%= admin.first_name%> <%= admin.last_name%></td>
                         <td><%= new Date(admin.createdAt).toLocaleString() %></td>
+                        <% if (!admin.is_superuser) {%>
                         <td class="text-center">
                           <a 
                             class="btn btn-success btn-sm" 
-                            href="/admin/app-user/update/<%= admin._id %>"
+                            href="/dashboard/admins/<%= admin._id %>/edit"
                           >
                             <i class="fas fa-pencil-alt"></i> Edit
                           </a>
@@ -47,12 +48,16 @@
                         <td class="text-center">
                           <a 
                             class="btn btn-danger btn-sm" 
-                            href="/admin/app-user/delete/<%= admin._id %>"
-                            onclick="return confirm('Are you sure you want to delete this user?');"
+                            href="/dashboard/admins/<%= admin._id %>/delete"
+                             onclick="return confirm('Are you sure you want to delete this user?');"
                           >
                             <i class="fas fa-trash"></i> Remove
                           </a>
                         </td>
+                        <% } else{ %>
+                          <td></td>
+                          <td></td>
+                          <% } %>
                       </tr>
                       <% index++; %>
                     <% } %>

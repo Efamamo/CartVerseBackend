@@ -5,12 +5,7 @@ const All_Permissions = [
     description: 'can view users module',
     user_type: ['ADMIN'],
   },
-  {
-    model: 'LookUp',
-    code_name: 'can_view_lookup_module',
-    description: 'can view lookup module',
-    user_type: ['ADMIN'],
-  },
+
   {
     model: 'ProductCategory',
     code_name: 'can_view_category_module',
@@ -108,32 +103,6 @@ const All_Permissions = [
     user_type: ['ADMIN'],
   },
 
-  //Seller
-  {
-    model: 'Seller',
-    code_name: 'can_view_sellers',
-    description: 'can view sellers',
-    user_type: ['ADMIN'],
-  },
-  {
-    model: 'Seller',
-    code_name: 'can_create_sellers',
-    description: 'can create sellers',
-    user_type: ['ADMIN'],
-  },
-  {
-    model: 'Seller',
-    code_name: 'can_update_sellers',
-    description: 'can update sellers',
-    user_type: ['ADMIN'],
-  },
-  {
-    model: 'Seller',
-    code_name: 'can_delete_sellers',
-    description: 'can delete sellers',
-    user_type: ['ADMIN'],
-  },
-
   //Products
   {
     model: 'Products',
@@ -157,12 +126,6 @@ const All_Permissions = [
     model: 'Products',
     code_name: 'can_delete_products',
     description: 'can delete products',
-    user_type: ['ADMIN', 'SELLER'],
-  },
-  {
-    model: 'Products',
-    code_name: 'can_add_audio_products',
-    description: 'can add audio products',
     user_type: ['ADMIN', 'SELLER'],
   },
 

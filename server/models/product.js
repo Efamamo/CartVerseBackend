@@ -27,6 +27,12 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
 
+  owner: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+    ref: 'AdminUser',
+  },
+
   description: {
     type: String,
     required: true,

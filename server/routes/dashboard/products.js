@@ -11,42 +11,72 @@ import {
   updateProductImages,
 } from '../../controller/product.js';
 import { Category } from '../../models/category.js';
+import checkRole from '../../middlewares/requireRole.js';
+import { AdminUser } from '../../models/admin.js';
 
 const productsRouter = Router();
 
-productsRouter.get('/', async (req, res) => {
-  const products = await Product.find();
+productsRouter.get('/', checkRole('can_view_products'), async (req, res) => {
+  const { id } = req.user;
+  const user = await AdminUser.findById(id);
+  let products = await Product.find();
+
+  if (!user.is_superuser) {
+    products = await Product.find({ owner: id });
+  }
+
   res.render('products/products', {
     title: 'Products',
     products: products,
   });
 });
 
-productsRouter.get('/add', async (req, res) => {
-  const categories = await Category.find();
-  res.render('products/add_product', {
-    title: 'Add Product',
-    categories: categories,
-  });
-});
+productsRouter.get(
+  '/add',
+  checkRole('can_create_products'),
+  async (req, res) => {
+    const categories = await Category.find();
+    res.render('products/add_product', {
+      title: 'Add Product',
+      categories: categories,
+    });
+  }
+);
 
-productsRouter.get('/:id/edit', async (req, res) => {
-  const { id } = req.params;
-  const product = await Product.findById(id).populate('category');
-  const categories = await Category.find();
+productsRouter.get(
+  '/:id/edit',
+  checkRole('can_update_products'),
+  async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id).populate('category');
+    const categories = await Category.find();
 
-  res.render('products/edit_product', {
-    title: 'Edit Product',
-    product: product,
-    categories: categories,
-  });
-});
+    res.render('products/edit_product', {
+      title: 'Edit Product',
+      product: product,
+      categories: categories,
+    });
+  }
+);
 
-productsRouter.post('/:id/edit', updateProduct);
+productsRouter.post(
+  '/:id/edit',
+  checkRole('can_update_products'),
+  updateProduct
+);
 
-productsRouter.get('/:id/delete', deleteProduct);
+productsRouter.get(
+  '/:id/delete',
+  checkRole('can_delete_products'),
+  deleteProduct
+);
 
-productsRouter.post('/add', uploadImages, addProduct);
+productsRouter.post(
+  '/add',
+  checkRole('can_create_products'),
+  uploadImages,
+  addProduct
+);
 
 productsRouter.get('/sales-report', (req, res) => {
   res.render('products/sales_report', { title: 'Sales Report', report: [] });
