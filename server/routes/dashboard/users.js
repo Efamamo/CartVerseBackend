@@ -1,11 +1,13 @@
 import { Router } from 'express';
-
+import { User } from '../../models/user.js';
+import checkRole from '../../middlewares/requireRole.js';
 const userRouter = Router();
 
-userRouter.get('/', (req, res) => {
+userRouter.get('/', checkRole('can_view_users_module'), async (req, res) => {
+  const users = await User.find();
   res.render('users/users', {
     title: 'Users',
-    users: [{ name: 'Ephrem', createdAt: '2024-11-27T12:42:39.247+00:00' }],
+    users: users,
   });
 });
 

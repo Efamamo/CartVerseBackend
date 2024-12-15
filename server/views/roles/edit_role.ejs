@@ -6,16 +6,16 @@
     <div id="app">
       <div class="main-wrapper main-wrapper-1">
         <%- include("../partials/nav.ejs") %> <%-
-        include("../partials/side_bar.ejs") %> <
-        <div class="card-body max-w-6xl mx-auto mt-5">
-          <h4 class="card-title mb-4 text-center">Filter by User Type</h4>
+        include("../partials/side_bar.ejs") %>
+        <div class="card-body max-w-6xl mx-auto mt-20">
           <div class="row">
             <div class="col-sm-12">
               <form
-                action="/dashboard/roles/add"
+                action="/dashboard/roles/<%= role._id %>/edit"
                 method="post"
                 id="user-type-radio-container"
               >
+                <!-- Role Name -->
                 <div class="row mb-4">
                   <div class="col-md-12">
                     <label for="role_name" class="form-label">Role Name</label>
@@ -25,10 +25,13 @@
                       id="role_name"
                       name="role_name"
                       placeholder="Enter Unique Role Name"
+                      value="<%= role.role_name %>"
+                      required
                     />
                   </div>
                 </div>
 
+                <!-- Select All Permissions -->
                 <div class="row mb-4">
                   <div class="col-md-12">
                     <div class="form-check">
@@ -44,18 +47,17 @@
                   </div>
                 </div>
 
+                <!-- Permissions List -->
                 <div class="row gy-3" id="permission-list-container">
                   <% permissions.forEach(permission => { %>
                   <div class="col-md-4">
                     <div class="form-check">
-                      <input
-                        class="form-check-input permission"
-                        type="checkbox"
-                        data-user-type="<%= permission.user_type %>"
-                        name="permissions[]"
-                        id="<%= permission._id %>"
-                        value="<%= permission._id %>"
-                      />
+                      <input class="form-check-input permission" type="checkbox"
+                      data-user-type="<%= permission.user_type %>"
+                      name="permissions[]" id="<%= permission._id %>" value="<%=
+                      permission._id %>" <%=
+                      role.permissions.includes(permission._id) ? 'checked' : ''
+                      %> />
                       <label
                         class="form-check-label"
                         for="<%= permission._id %>"
@@ -67,6 +69,7 @@
                   <% }) %>
                 </div>
 
+                <!-- Buttons -->
                 <div class="row mt-5">
                   <div class="col-md-12 text-end">
                     <a
@@ -86,6 +89,7 @@
         include('../partials/footer.ejs') %>
       </div>
     </div>
+
     <script>
       // Get the "Select All" checkbox and all permission checkboxes
       const selectAllCheckbox = document.getElementById('selectAll');
@@ -109,6 +113,23 @@
           // Update the "Select All" checkbox
           selectAllCheckbox.checked = allChecked;
         });
+      });
+      function updateSelectAllState() {
+        const allChecked = Array.from(permissionCheckboxes).every(
+          (cb) => cb.checked
+        );
+        selectAllCheckbox.checked = allChecked;
+      }
+
+      permissionCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function () {
+          updateSelectAllState();
+        });
+      });
+
+      // Check the initial state of the "Select All" checkbox when the page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        updateSelectAllState();
       });
     </script>
 

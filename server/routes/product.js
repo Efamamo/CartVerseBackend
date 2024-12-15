@@ -11,7 +11,7 @@ import {
 } from '../controller/product.js';
 import fileUpload, { uploadImages } from '../middlewares/fileUpload.js';
 import requireToken from '../middlewares/requireToken.js';
-import requireAdminToken from '../middlewares/requireAdminToken.js';
+import requireAdminToken from '../middlewares/requireRole.js';
 
 const productRouter = Router();
 

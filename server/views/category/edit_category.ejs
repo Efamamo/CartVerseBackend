@@ -20,7 +20,7 @@
                   <div class="card-body">
                     <form
                       method="post"
-                      action="/dashboard/categories/add"
+                      action="/dashboard/categories/<%=category._id%>/edit"
                       class="needs-validation"
                       novalidate=""
                     >
@@ -34,6 +34,7 @@
                           tabindex="1"
                           required
                           autofocus
+                          value="<%= category.name_english%>"
                         />
                         <div class="invalid-feedback">
                           Please fill in english category name
@@ -52,6 +53,7 @@
                           name="name_amharic"
                           tabindex="2"
                           required
+                          value="<%= category.name_amharic%>"
                         />
                         <div class="invalid-feedback">
                           please enter amharic category name
@@ -68,8 +70,11 @@
                           class="form-control"
                           name="description"
                           tabindex="3"
+                          value="<%= category.description%>"
                         >
-                        </textarea>
+                        <%= category.description%>
+                      </textarea
+                        >
                       </div>
                       <div class="form-group">
                         <button

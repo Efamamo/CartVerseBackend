@@ -8,7 +8,7 @@
         <%- include("../partials/nav.ejs") %> <%-
         include("../partials/side_bar.ejs") %>
         <section class="section mt-10 md:mt-40">
-          <div class="card col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-5 offset-xl-4">
+          <div class="card col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-6 offset-xl-4">
             <div class="card-footer text-end">
               <a
                 href="/admin/app-user/create"
@@ -24,7 +24,9 @@
                     <tr>
                       <th>ID</th>
                       <th>User Name</th>
-                      <th>Created At</th>
+                      <th>Email</th>
+                      <th>Phone Number</th>
+                      <th>IsAdmin</th>
                       <th>Edit</th>
                       <th>Delete</th>
                     </tr>
@@ -35,7 +37,11 @@
                       <tr>
                         <td><%= index %></td>
                         <td><%= item.name %></td>
-                        <td><%= new Date(item.createdAt).toLocaleString() %></td>
+                        <td><%= item.email || 'Null'%></td>
+                        <td><%= item.phoneNumber || 'Null'%></td>
+                        <td><%= item.isAdmin %></td>
+
+
                         <td class="text-center">
                           <a 
                             class="btn btn-success btn-sm" 

@@ -27,15 +27,6 @@ const RoleSchema = mongoose.Schema(
       default: false,
     },
     description: { type: String },
-    created_by: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'AdminUser',
-      required: [true, 'Creater user is required'],
-    },
-    updated_by: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
   },
   { timestamps: true }
 );

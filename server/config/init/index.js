@@ -1,39 +1,43 @@
 import { AdminUser } from '../../models/admin.js';
 import { Permission } from '../../models/permission.js';
-import bcrypt from 'bcrypt';
 import All_Permissions from '../permissions.js';
+import { hashPassword } from '../../services/password-service.js';
+import { connectToDB } from '../../database/mongoose.js';
 
 export const createSuperAdminUser = async (userObject) => {
   try {
-    const phone_number = userObject.phone_number;
+    await connectToDB();
+    const email = userObject.email;
+    let user = await AdminUser.findOne({ email_address: email });
 
-    AdminUser.findOne({ phone_number }).then((user) => {
-      if (user != null) {
-        console.error('AdminUser With this Phone Number already exists');
-        process.exit(1);
-      }
+    if (user) {
+      return { error: 'AdminUser With this email already exists' };
+    }
+
+    const phone = userObject.phoneNumber;
+
+    user = await AdminUser.findOne({ phone_number: phone });
+
+    if (user) {
+      return { error: 'AdminUser With this phone number already exists' };
+    }
+
+    const hashedPassword = await hashPassword(userObject.password);
+
+    const newAdmin = new AdminUser({
+      passcode: userObject.passcode,
+      email_address: userObject.email,
+      user_password: hashedPassword,
+      phone_number: userObject.phoneNumber,
+      first_name: userObject.firstName,
+      last_name: userObject.lastName,
+      is_superuser: true,
     });
 
-    AdminUser.create(userObject)
-      .then(async (newAdminUser) => {
-        const hash = await bcrypt.hash(newAdminUser.user_password, 10);
-        // save password to user collection
-        newAdminUser.user_password = hash;
-        newAdminUser.is_superuser = true;
-        newAdminUser.is_active = true;
-        newAdminUser.user_type = 'ADMIN';
-        newAdminUser.roles = [];
-        await newAdminUser.save();
-        console.dir('Superuser created successfully', { colors: true });
-        process.exit(0);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        process.exit(1);
-      });
+    await newAdmin.save();
+    return {};
   } catch (error) {
-    console.log(error.message);
-    process.exit(1);
+    return { error: error.message };
   }
 };
 
