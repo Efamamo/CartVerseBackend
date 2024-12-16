@@ -12,20 +12,26 @@ import wishlistsRouter from './wishlists.js';
 import { Product } from '../../models/product.js';
 import { User } from '../../models/user.js';
 import checkRole from '../../middlewares/requireRole.js';
+import { AdminUser } from '../../models/admin.js';
 const dashboardRouter = Router();
 dashboardRouter.get('/', checkRole('can_view_dashboard'), async (req, res) => {
   const users = await User.find();
+  const user = await AdminUser.findById(req.user.id);
   const products = await Product.find();
   res.render('dashboard/index', {
     title: 'Dashboard',
     users: users,
     products: products,
+    user,
   });
 });
-dashboardRouter.get('/forbidden', (req, res) => {
-      res.render('forbidden', {
-        title: 'Forbidden',
-      });
+dashboardRouter.get('/forbidden', async (req, res) => {
+  const user = await AdminUser.findById(req.user.id);
+
+  res.render('forbidden', {
+    title: 'Forbidden',
+    user,
+  });
 });
 dashboardRouter.use('/users', userRouter);
 dashboardRouter.use('/products', productsRouter);

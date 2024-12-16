@@ -28,6 +28,7 @@ productsRouter.get('/', checkRole('can_view_products'), async (req, res) => {
   res.render('products/products', {
     title: 'Products',
     products: products,
+    user,
   });
 });
 
@@ -36,9 +37,12 @@ productsRouter.get(
   checkRole('can_create_products'),
   async (req, res) => {
     const categories = await Category.find();
+    const user = await AdminUser.findById(req.user.id);
+
     res.render('products/add_product', {
       title: 'Add Product',
       categories: categories,
+      user,
     });
   }
 );
@@ -50,11 +54,13 @@ productsRouter.get(
     const { id } = req.params;
     const product = await Product.findById(id).populate('category');
     const categories = await Category.find();
+    const user = await AdminUser.findById(req.user.id);
 
     res.render('products/edit_product', {
       title: 'Edit Product',
       product: product,
       categories: categories,
+      user,
     });
   }
 );
@@ -78,8 +84,15 @@ productsRouter.post(
   addProduct
 );
 
-productsRouter.get('/sales-report', (req, res) => {
-  res.render('products/sales_report', { title: 'Sales Report', report: [] });
+productsRouter.get('/sales-report', checkRole(''), async (req, res) => {
+  const { id } = req.user;
+  const user = await AdminUser.findById(req.user.id);
+
+  res.render('products/sales_report', {
+    title: 'Sales Report',
+    report: [],
+    user,
+  });
 });
 
 export default productsRouter;

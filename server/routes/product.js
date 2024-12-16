@@ -8,6 +8,7 @@ import {
   getProducts,
   updateProduct,
   updateProductImages,
+  categories,
 } from '../controller/product.js';
 import fileUpload, { uploadImages } from '../middlewares/fileUpload.js';
 import requireToken from '../middlewares/requireToken.js';
@@ -16,6 +17,8 @@ import requireAdminToken from '../middlewares/requireRole.js';
 const productRouter = Router();
 
 productRouter.get('/', requireToken, getProducts);
+
+productRouter.get('/categories', requireToken, categories);
 
 productRouter.get('/:id', requireToken, getProductById);
 
@@ -76,5 +79,6 @@ productRouter.patch(
   updateProduct
 );
 productRouter.delete('/:id', requireToken, requireAdminToken, deleteProduct);
+productRouter.patch('/checkout/chapa', requireToken, checkout);
 
 export default productRouter;
