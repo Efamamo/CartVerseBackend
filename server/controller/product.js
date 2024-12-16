@@ -4,6 +4,10 @@ import fs from 'fs';
 import { Product } from '../models/product.js';
 import mongoose from 'mongoose';
 import { AdminUser } from '../models/admin.js';
+import Purchase from '../models/purchase.js';
+
+import { Category } from '../models/category.js';
+import { v4 } from 'uuid';
 
 export const getProducts = async (req, res) => {
   try {
@@ -194,15 +198,30 @@ export const updateProductImages = async (req, res) => {
   }
 };
 
+export const categories = async (req, res) => {
+  console.log('categories');
+  try {
+    const categories = await Category.find();
+    return res.json(categories);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+};
+
 export const checkout = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).send({ errors: formatErrors(errors) });
   }
 
-  const { items, phoneNumber, email } = req.body;
+  const { items, phoneNumber, email, address } = req.body;
+
+  const { id } = req.user;
 
   const error = [];
+  const purchaseItems = [];
+  let total = 0;
   for (const item of items) {
     const { id, amount } = item;
 
@@ -213,19 +232,28 @@ export const checkout = async (req, res) => {
     if (i.amount < amount) {
       error.push(`amount: there are only ${i.amount} ${i.name}s`);
     }
+    purchaseItems.push({ amount, product: id });
+    total += amount * i.price;
   }
 
   if (error.length !== 0) {
     return res.status(400).send({ errors });
   }
 
-  const newRent = new Rent({
-    email: req.body.email,
-    items: req.body.items,
-    totalAmount: total,
-  });
+  const tx = `chewatatest-${v4()}`;
+  for (let p of purchaseItems) {
+    const purchase = new Purchase({
+      user: id,
+      address,
+      tx_ref: tx,
+      product: p.product,
+      amount: p.amount,
+      paymentStatus: 'PENDING',
+    });
 
-  const tx = `chewatatest-${newRent._id}`;
+    await purchase.save();
+  }
+
   var myHeaders = new Headers();
   myHeaders.append('Authorization', `Bearer ${process.env.CHAPA_SECRET_KEY}`);
   myHeaders.append('Content-Type', 'application/json');
@@ -233,10 +261,11 @@ export const checkout = async (req, res) => {
   var raw = JSON.stringify({
     amount: total,
     currency: 'ETB',
-    email: req.body.email,
-    phone_number: req.body.phoneNumber,
+    email: email,
+    phone_number: phoneNumber,
     tx_ref: tx,
     callback_url: 'https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60',
+    return_url: `http://localhost:3003/dashboard/purchases/${tx}`,
     'customization[title]': 'Payment for my favourite merchant',
     'customization[description]': 'I love online payments',
     'meta[hide_receipt]': 'true',
@@ -252,4 +281,12 @@ export const checkout = async (req, res) => {
     'https://api.chapa.co/v1/transaction/initialize',
     requestOptions
   );
+
+  const result = await response.json();
+
+  if (result.status === 'success') {
+    return res.json(result.data.checkout_url);
+  } else {
+    return res.json(500).json('server error');
+  }
 };

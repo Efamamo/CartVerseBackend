@@ -12,7 +12,7 @@ export function generateToken(user) {
     isAdmin: user.isAdmin,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '15m' });
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '15d' });
   return token;
 }
 

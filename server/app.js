@@ -9,7 +9,6 @@ import { fileURLToPath } from 'url';
 import { createPermission, createSuperAdminUser } from './config/init/index.js';
 import dashboardRouter from './routes/dashboard/dashboard.js';
 import cookieParser from 'cookie-parser';
- 
 
 const app = express();
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
@@ -19,7 +18,6 @@ app.use(cookieParser());
 app.use(express.json());
 connectToDB();
 createPermission();
-
 
 app.set('view engine', 'ejs');
 const __filename = fileURLToPath(import.meta.url);

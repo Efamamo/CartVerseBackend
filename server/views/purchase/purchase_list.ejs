@@ -47,12 +47,12 @@
                   </thead>
                   <tbody id="purchaseTableBody">
                     <% let index = 1; %> <% for (let item of purchases) { %>
-                    <tr data-status="<%= item.status %>">
+                    <tr data-status="<%= item.paymentStatus %>">
                       <td><%= index %></td>
-                      <td><%= item.name %></td>
+                      <td><%= item.product.name %></td>
                       <td><%= item.amount %></td>
-                      <td><%= item.price %></td>
-                      <td><%= item.status %></td>
+                      <td><%= item.amount * item.product.price %></td>
+                      <td><%= item.paymentStatus %></td>
                       <td><%= new Date(item.createdAt).toLocaleString() %></td>
                     </tr>
                     <% index++; %> <% } %>
@@ -70,7 +70,7 @@
 
     <!-- General JS Scripts -->
     <script src="/js/app.min.js"></script>
-    <!-- JS Libraies -->
+    <!-- JS Libraries -->
     <script src="/bundles/apexcharts/apexcharts.min.js"></script>
     <!-- Page Specific JS File -->
     <script src="/js/page/index.js"></script>
@@ -80,16 +80,17 @@
     <script src="/js/custom.js"></script>
 
     <script>
+      // Filtering function
       function filterPurchases() {
-        const filterValue = document.getElementById('paymentFilter').value;
-        const rows = document.querySelectorAll('#purchaseTableBody tr');
+        const filterValue = document.getElementById('paymentFilter').value; // Get selected filter
+        const rows = document.querySelectorAll('#purchaseTableBody tr'); // Select all table rows
 
         rows.forEach((row) => {
-          const status = row.getAttribute('data-status');
+          const status = row.getAttribute('data-status'); // Get status from data attribute
           if (filterValue === 'ALL' || status === filterValue) {
-            row.style.display = '';
+            row.style.display = ''; // Show row
           } else {
-            row.style.display = 'none';
+            row.style.display = 'none'; // Hide row
           }
         });
       }
