@@ -5,16 +5,28 @@ export const getSellerPurchases = async (req, res) => {
   const { id } = req.user;
   const user = await AdminUser.findById(id);
   let purchases = await Purchase.find().populate('product');
-  console.log(user.is_superuser);
 
-  if (!user.is_superuser) {
-    purchases = purchases.filter((p) => p.product.owner.toString() === id);
-  }
+  purchases = purchases.filter((p) => p.product.owner.toString() === id);
 
   res.render('purchase/purchase_list', {
     title: 'All Purchse',
     purchases,
     user,
+  });
+};
+
+export const getSoldProducts = async (req, res) => {
+  const { id } = req.user;
+  const user = await AdminUser.findById(id);
+  let purchases = await Purchase.find({ paymentStatus: 'PAID' }).populate(
+    'product'
+  );
+  purchases = purchases.filter((p) => p.product.owner.toString() === id);
+
+  res.render('products/sold_products', {
+    title: 'Sold Products',
+    user,
+    purchases,
   });
 };
 
