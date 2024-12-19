@@ -17,7 +17,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 connectToDB();
-createPermission();
 
 app.set('view engine', 'ejs');
 const __filename = fileURLToPath(import.meta.url);

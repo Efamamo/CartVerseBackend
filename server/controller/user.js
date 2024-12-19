@@ -316,9 +316,7 @@ export const forgotPassword = async (req, res) => {
       return res.status(400).json({ errors: formatErrors(errors) });
     }
 
-
     const { emailOrPhone } = req.body;
-    
 
     const user = await User.findOne({
       $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
@@ -354,7 +352,7 @@ export const resetPassword = async (req, res) => {
 
     const { email, token, newPassword } = req.body;
 
-    console.log(email)
+    console.log(email);
 
     const user = await User.findOne({
       $or: [{ email: email }, { phoneNumber: email }],
@@ -411,8 +409,12 @@ export const updateProfile = async (req, res) => {
   const { id } = req.user;
 
   try {
+    console.log("trying")
     const user = await User.findById(id);
     if (!user) return res.sendStatus(401);
+
+    const profile = req.files.profile_pic;
+    console.log(profile)
 
     const updateData = {};
     const allowedFields = ['name'];
@@ -422,6 +424,12 @@ export const updateProfile = async (req, res) => {
         updateData[field] = req.body[field];
       }
     });
+
+    if (profile) {
+      updateData['profile_pic'] = profile[0].path;
+    }
+
+    console.log(updateData);
 
     const u = await User.findByIdAndUpdate(id, updateData, {
       new: true,
@@ -490,5 +498,26 @@ export async function googleOauth(req, res) {
     res.json({ accessToken, refreshToken });
   } catch (error) {
     res.status(401).send('Invalid Google Token');
+  }
+}
+
+
+export async function deleteAccount(req, res){
+  try{
+    const {id} = req.user
+    const user = await User.findById(id)
+
+    if (!user){
+      return res.status(404).json({error: "User not found"})
+    }
+
+    await User.findByIdAndDelete(id)
+
+    return res.sendStatus(200)
+
+
+  }catch(e){
+    console.error(e)
+    res.status(500).json({error: "server error"})
   }
 }

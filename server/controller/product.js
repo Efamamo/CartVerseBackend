@@ -11,7 +11,7 @@ import { v4 } from 'uuid';
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({ amount: { $gt: 0 } });
     res.json(products);
   } catch (error) {
     res.status(500).json(error);

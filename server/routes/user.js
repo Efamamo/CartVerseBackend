@@ -15,8 +15,10 @@ import {
   verifyUser,
   getProfile,
   updateProfile,
+  deleteAccount
 } from '../controller/user.js';
 import requireToken from '../middlewares/requireToken.js';
+import { uploadProfile } from '../middlewares/profileUpload.js';
 
 const userRouter = Router();
 
@@ -114,8 +116,10 @@ userRouter.patch(
 );
 
 userRouter.get('/profile', requireToken, getProfile);
-userRouter.patch('/profile', requireToken, updateProfile);
+userRouter.patch('/profile', requireToken, uploadProfile, updateProfile);
 userRouter.get('/wishlists', requireToken, check(), getWishlists);
 userRouter.patch('/wishlists/:pid', requireToken, toggleWishlist);
+userRouter.delete('/deleteAccount', requireToken, deleteAccount);
+
 
 export default userRouter;
