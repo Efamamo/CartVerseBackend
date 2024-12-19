@@ -7,7 +7,6 @@ import { AdminUser } from '../models/admin.js';
 
 const checkRole = (currentRole) => async (req, res, next) => {
   const token = req.cookies.accessToken;
-  console.log(token);
 
   if (!token) {
     return res.redirect('/dashboard/auth/login');
@@ -24,6 +23,10 @@ const checkRole = (currentRole) => async (req, res, next) => {
 
     var assignedPermissions = [];
 
+    if (currentRole == '') {
+      return next();
+    }
+
     const roles = await Role.find({ _id: { $in: user.roles } }).populate(
       'permissions'
     );
@@ -32,11 +35,11 @@ const checkRole = (currentRole) => async (req, res, next) => {
       assignedPermissions.push(...role.permissions);
     });
 
-    console.log(roles);
 
     const hasRole = assignedPermissions.find(
       (assignedPermission) => assignedPermission.code_name === currentRole
     );
+
     if (!hasRole) {
       return res.redirect('/dashboard/forbidden');
     }
