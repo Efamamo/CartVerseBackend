@@ -1,7 +1,16 @@
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
-// Define allowed MIME types and their corresponding extensions
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Set MIME types (if needed for validation or metadata)
 const MIME_TYPES = {
   'image/png': 'png',
   'image/jpg': 'jpg',
@@ -10,27 +19,24 @@ const MIME_TYPES = {
   'image/webp': 'webp',
 };
 
-// Configure multer storage
-const fileUpload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/images');
+// Configure Cloudinary storage for multer
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: '/cartverse/images', // Specify folder in your Cloudinary account
+    format: async (req, file) => {
+      // Use the MIME type mapping or default to 'jpeg'
+      return MIME_TYPES[file.mimetype] || 'jpeg';
     },
-    filename: (req, file, cb) => {
-      const ext = MIME_TYPES[file.mimetype];
-      cb(null, uuidv4() + '.' + ext);
-    },
-  }),
-  fileFilter: (req, file, cb) => {
-    const isValid = !!MIME_TYPES[file.mimetype];
-    const error = isValid ? null : new Error('Invalid image type');
-    cb(error, isValid);
+    public_id: (req, file) => uuidv4(), // Generate unique public ID for the image
   },
 });
+
+// Configure multer with Cloudinary storage
+const fileUpload = multer({ storage: cloudinaryStorage });
 
 export const uploadImages = fileUpload.fields([
   { name: 'main_image', maxCount: 1 },
   { name: 'sub_images', maxCount: 5 },
-]);
 
-export default uploadImages;
+]);

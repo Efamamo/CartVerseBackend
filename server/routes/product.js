@@ -10,7 +10,7 @@ import {
   updateProductImages,
   categories,
 } from '../controller/product.js';
-import fileUpload, { uploadImages } from '../middlewares/fileUpload.js';
+import { uploadImages } from '../middlewares/fileUpload.js';
 import requireToken from '../middlewares/requireToken.js';
 import requireAdminToken from '../middlewares/requireRole.js';
 
